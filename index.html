@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Class Forge - Beta 1.7</title>
+<title>Class Forge - Beta 1.8 (Identity)</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 <script>pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -15,29 +15,51 @@
 body { font-family: 'Roboto', sans-serif; margin: 0; padding: 0; background-color: var(--bg-dark); background-image: linear-gradient(335deg, #0f0f0f 23px, transparent 23px), linear-gradient(155deg, #0f0f0f 23px, transparent 23px); background-size: 58px 58px; color: var(--text-main); height: 100dvh; overflow: hidden; display: flex; flex-direction: column; align-items: center; transition: background 1s ease; }
 body.boss-mode { background-color: #1a0505; background-image: linear-gradient(335deg, #2a0000 23px, transparent 23px), linear-gradient(155deg, #2a0000 23px, transparent 23px); box-shadow: inset 0 0 150px #ff0000; }
 h1, h2, h3 { font-family: 'Cinzel', serif; letter-spacing: 2px; }
+
+/* BRANDING */
+.brand-title {
+    font-size: 3.5rem; font-weight: 900; color: var(--gold); 
+    text-shadow: 0 0 15px rgba(255, 215, 0, 0.6), 0 4px 0 #8b6508;
+    margin-bottom: 5px; text-transform: uppercase; letter-spacing: 4px;
+    text-align: center;
+}
+.version-badge {
+    background: rgba(212, 175, 55, 0.15); border: 1px solid var(--gold);
+    color: var(--gold-glow); padding: 5px 15px; border-radius: 20px;
+    font-size: 0.9rem; letter-spacing: 2px; font-weight: bold;
+    margin-bottom: 25px; display: inline-block; text-transform: uppercase;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+}
+
 #confetti-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 9999; display: none; }
 .torch-container { position: fixed; top: 20%; width: 100px; height: 300px; z-index: 0; pointer-events: none; }
 .torch-left { left: 20px; } .torch-right { right: 20px; }
 .torch-flame { width: 30px; height: 50px; background: linear-gradient(0deg, var(--fire-core), var(--fire-mid), transparent); border-radius: 50% 50% 20% 20%; position: absolute; left: 35px; top: 0; filter: blur(5px); animation: flicker 0.5s infinite alternate; box-shadow: 0 0 40px 10px rgba(255, 100, 0, 0.4); }
 .torch-handle { width: 10px; height: 100px; background: #444; position: absolute; left: 45px; top: 40px; background: linear-gradient(90deg, #222, #555, #222); transform: perspective(10px) rotateX(5deg); }
 @keyframes flicker { 0% { transform: scale(1) skewX(-2deg); opacity: 0.9; } 100% { transform: scale(0.95) skewX(-1deg); opacity: 0.8; } }
+
 .hud-bar { position: fixed; top: 10px; right: 10px; left: 10px; z-index: 1000; background: rgba(0,0,0,0.9); padding: 5px 12px; border: 2px solid var(--gold); border-radius: 4px; display: none; align-items: center; justify-content: space-between; gap: 15px; }
 .hp-container { display: flex; align-items: center; gap: 8px; flex: 1; }
 .hp-track { width: 100%; max-width: 150px; height: 10px; background: #222; border: 1px solid #555; transform: skewX(-10deg); }
 .hp-fill { width: 100%; height: 100%; background: linear-gradient(90deg, #c0392b, #e74c3c); transition: width 0.4s ease-out; }
 .menu-btn { background: transparent; border: 1px solid var(--gold); color: var(--gold); padding: 5px 10px; font-size: 0.8rem; cursor: pointer; border-radius: 4px; font-family: 'Cinzel', serif; }
 .menu-btn:hover { background: rgba(212, 175, 55, 0.2); }
-.config-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 2000; display: flex; justify-content: center; align-items: center; flex-direction: column; padding: 15px; overflow-y: auto; }
-.config-box { width: 100%; max-width: 500px; padding: 20px; background: #111; border: 2px solid var(--gold); box-shadow: 0 0 20px rgba(212, 175, 55, 0.1); transition: border 0.3s; }
+
+/* LAYOUT FIX FOR PC: Flex-start + Padding top ensures headers are never cut off */
+.config-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.98); z-index: 2000; display: flex; justify-content: flex-start; align-items: center; flex-direction: column; padding: 15px; overflow-y: auto; padding-top: 5vh; }
+.config-box { width: 100%; max-width: 500px; padding: 25px; background: #111; border: 2px solid var(--gold); box-shadow: 0 0 30px rgba(212, 175, 55, 0.15); transition: border 0.3s; margin-bottom: 50px; }
+
 .omega-active { border: 3px solid transparent; border-image: linear-gradient(45deg, red, orange, yellow, green, blue, indigo, violet) 1; animation: rainbowBorder 2s linear infinite; box-shadow: 0 0 30px rgba(255, 255, 255, 0.2); }
 @keyframes rainbowBorder { 0% { filter: hue-rotate(0deg); } 100% { filter: hue-rotate(360deg); } }
+
 input, select, textarea { width: 100%; background: #080808; border: 1px solid #444; color: var(--gold); padding: 12px; margin: 5px 0 15px 0; font-family: 'Roboto', sans-serif; font-size: 16px; border-radius: 4px; }
 textarea { height: 60px; resize: none; }
 .btn-main { width: 100%; padding: 16px; font-family: 'Cinzel', serif; font-weight: 700; font-size: 1.1rem; background: linear-gradient(180deg, #b8860b, #8b6508); color: #000; border: 1px solid #ffd700; cursor: pointer; text-transform: uppercase; margin-top: 10px; border-radius: 4px; transition: 0.2s; }
 .btn-main:hover { filter: brightness(1.1); transform: scale(1.02); }
 .btn-sec { background: #222; border-color: #444; color: #aaa; font-size: 0.9rem; margin-top: 10px; }
-.dashboard-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 3000; display: none; flex-direction: column; padding: 20px; overflow-y: auto; backdrop-filter: blur(5px); }
-.dash-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 20px; margin-bottom: 20px; }
+
+.dashboard-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 3000; display: none; flex-direction: column; padding: 20px; overflow-y: auto; backdrop-filter: blur(5px); justify-content: flex-start; padding-top: 5vh; }
+.dash-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #333; padding-bottom: 20px; margin-bottom: 20px; width: 100%; max-width: 600px; margin: 0 auto 20px auto; }
 .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 30px; }
 .stat-card { background: #151515; padding: 20px; border: 1px solid #333; text-align: center; }
 .stat-num { font-size: 2rem; color: var(--gold); font-weight: bold; }
@@ -45,6 +67,7 @@ textarea { height: 60px; resize: none; }
 .student-list th { text-align: left; color: #888; padding: 10px; border-bottom: 1px solid #333; }
 .student-list td { padding: 15px 10px; border-bottom: 1px solid #222; }
 .grade-good { color: var(--green); } .grade-bad { color: var(--red); }
+
 #game-area { width: 100%; height: 100%; display: none; position: relative; z-index: 10; overflow-x: auto; overflow-y: hidden; -webkit-overflow-scrolling: touch; white-space: nowrap; padding: 0 20px; }
 .map-flex { display: flex; align-items: center; height: 100%; gap: 30px; padding-left: 50vw; padding-right: 50vw; }
 .card { width: 220px; height: 320px; flex-shrink: 0; background: var(--card-bg); border: 2px solid #444; display: inline-flex; flex-direction: column; align-items: center; justify-content: flex-start; position: relative; cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.5); white-space: normal; transition: transform 0.2s; padding: 15px; }
@@ -56,6 +79,7 @@ textarea { height: 60px; resize: none; }
 .card-title { font-size: 1.1rem; color: var(--gold); text-align: center; margin-bottom: 10px; font-weight: bold; }
 .card-desc { font-size: 0.8rem; color: #888; text-align: center; font-style: italic; display: -webkit-box; -webkit-line-clamp: 4; -webkit-box-orient: vertical; overflow: hidden; }
 .connector { width: 30px; height: 4px; background: #333; flex-shrink: 0; }
+
 .battle-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 1500; display: none; justify-content: center; align-items: center; padding: 10px; }
 .battle-window { width: 100%; max-width: 650px; height: 90vh; background: #0f0f0f; border: 1px solid var(--gold); display: flex; flex-direction: column; animation: modalOpen 0.3s ease-out; transition: border 0.3s, box-shadow 0.3s; }
 @keyframes modalOpen { from { transform: scale(0.95); opacity: 0; } to { transform: scale(1); opacity: 1; } }
@@ -81,7 +105,10 @@ textarea { height: 60px; resize: none; }
 .hidden { display: none !important; }
 .loader { font-size: 3rem; animation: spin 2s infinite linear; margin-bottom: 10px; }
 @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-@media (max-width: 768px) { .torch-container { display: none; } }
+@media (max-width: 768px) { 
+    .torch-container { display: none; }
+    .brand-title { font-size: 2.5rem; }
+}
 </style>
 </head>
 <body>
@@ -93,39 +120,41 @@ textarea { height: 60px; resize: none; }
 <button class="menu-btn" onclick="showDashboard()">⚙️ MENU</button>
 </div>
 <div id="config-screen" class="config-overlay" style="display:flex;">
-<h1 style="color: var(--gold); text-align: center; margin-bottom: 5px; font-size: 2rem;">CLASS FORGE</h1>
-<p style="color: #666; font-size: 0.7rem; letter-spacing: 3px; margin-bottom: 20px;">PAINEL BETA 1.7</p>
-<div class="config-box" id="configBox">
-<label style="color:var(--gold); font-weight:bold; display:block; margin-bottom:5px;">📜 Matéria</label>
-<select id="subject">
-<option value="">-- MODO LIVRE (Usa PDF abaixo) --</option>
-<option value="História">História</option>
-<option value="Matemática">Matemática</option>
-<option value="Geografia">Geografia</option>
-<option value="Ciências">Ciências</option>
-<option value="Física">Física</option>
-<option value="Química">Química</option>
-<option value="Literatura">Literatura</option>
-<option value="Inglês">Inglês</option>
-<option value="Tecnologia">Tecnologia</option>
-<option value="Conhecimentos Gerais">Conhecimentos Gerais</option>
-</select>
-<label style="color:var(--gold); font-weight:bold; display:block; margin-bottom:5px;">📂 Texto ou PDF</label>
-<input type="file" id="fileInput" accept=".pdf, .txt">
-<textarea id="classContent" placeholder="Cole texto aqui se preferir..."></textarea>
-<label style="color:var(--gold); font-weight:bold; display:block; margin-bottom:5px;">⚔️ Dificuldade</label>
-<select id="difficulty" onchange="checkOmega()">
-<option value="3">Rápido (3 Fases)</option>
-<option value="5" selected>Normal (5 Fases)</option>
-<option value="7">Longo (7 Fases)</option>
-</select>
-<label style="color:var(--gold); font-weight:bold; display:block; margin-bottom:5px;">🔑 API Key (Gemini)</label>
-<input type="password" id="apiKey" placeholder="Cole sua chave aqui">
-<button class="btn-main" onclick="initGame(true)">GERAR JOGO (IA)</button>
-<button class="btn-main btn-sec" onclick="showDashboard()">📊 RELATÓRIOS</button>
-<button class="btn-main btn-sec" onclick="initGame(false)">MODO DEMO</button>
-</div>
-<div id="loading" class="hidden" style="margin-top: 20px; text-align: center;"><div class="loader">⚙️</div><p style="color: var(--gold);">Calculando Fases...</p></div>
+    <h1 class="brand-title">CLASS FORGE</h1>
+    <div class="version-badge">BETA v1.8</div>
+    
+    <div class="config-box" id="configBox">
+    <label style="color:var(--gold); font-weight:bold; display:block; margin-bottom:5px;">📜 Matéria</label>
+    <select id="subject">
+    <option value="">-- MODO LIVRE (Usa PDF abaixo) --</option>
+    <option value="História">História</option>
+    <option value="Matemática">Matemática</option>
+    <option value="Geografia">Geografia</option>
+    <option value="Ciências">Ciências</option>
+    <option value="Física">Física</option>
+    <option value="Química">Química</option>
+    <option value="Literatura">Literatura</option>
+    <option value="Inglês">Inglês</option>
+    <option value="Tecnologia">Tecnologia</option>
+    <option value="Conhecimentos Gerais">Conhecimentos Gerais</option>
+    </select>
+    <label style="color:var(--gold); font-weight:bold; display:block; margin-bottom:5px;">📂 Texto ou PDF</label>
+    <input type="file" id="fileInput" accept=".pdf, .txt">
+    <textarea id="classContent" placeholder="Cole texto aqui se preferir..."></textarea>
+    <label style="color:var(--gold); font-weight:bold; display:block; margin-bottom:5px;">⚔️ Dificuldade</label>
+    <select id="difficulty" onchange="checkOmega()">
+    <option value="3">Rápido (3 Fases)</option>
+    <option value="5" selected>Normal (5 Fases)</option>
+    <option value="7">Longo (7 Fases)</option>
+    </select>
+    <label style="color:var(--gold); font-weight:bold; display:block; margin-bottom:5px;">🔑 API Key (Gemini)</label>
+    <input type="password" id="apiKey" placeholder="Cole sua chave aqui">
+    <button class="btn-main" onclick="initGame(true)">GERAR JOGO (IA)</button>
+    <button class="btn-main btn-sec" onclick="showDashboard()">📊 RELATÓRIOS</button>
+    <button class="btn-main btn-sec" onclick="initGame(false)">MODO DEMO</button>
+    </div>
+    <div id="loading" class="hidden" style="margin-top: 20px; text-align: center;"><div class="loader">⚙️</div><p style="color: var(--gold);">Calculando Fases...</p></div>
+    <div style="margin-top:auto; color:#444; font-size:0.8rem; padding-bottom:10px;">Project Class Forge © 2024</div>
 </div>
 <div id="dashboard" class="dashboard-overlay">
 <div class="dash-header"><h2 style="margin:0; color:var(--gold)">Painel de Controle</h2><button onclick="hideDashboard()" style="background:none; border:1px solid #444; color:#fff; padding:5px 15px; border-radius:4px;">VOLTAR AO JOGO</button></div>
